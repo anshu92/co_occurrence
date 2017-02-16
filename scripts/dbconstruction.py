@@ -16,7 +16,7 @@ def dbconstruction():
         "cluster0-shard-00-01-ouybv.mongodb.net:27017,"
         "cluster0-shard-00-02-ouybv.mongodb.net:27017/co_table?ssl=true&replicaSet=Cluster0-shard-0&authSource"
         "=admin")
-    db = client['co_table']
+    db = client['co_table_1622017']
 
     collection = db['co_collection']
 

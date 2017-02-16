@@ -2,6 +2,8 @@ from flask import Flask
 from flask import render_template
 from pymongo import MongoClient
 import pandas as pd
+from bson import ObjectId
+from operator import itemgetter
 
 app = Flask(__name__)
 
@@ -12,6 +14,16 @@ MONGODB_HOST = "mongodb://anshuman264:VJkCopXqbK5smqf0@cluster0-shard-00-00-ouyb
 MONGODB_PORT = 27017
 DBS_NAME = 'co_table'
 COLLECTION_NAME = 'co_collection'
+
+
+def todict(data):
+    obj = dict()
+    for key in data:
+        if isinstance(data[key], ObjectId):
+            print("Overflow - ", key, data[key])
+        else:
+            obj[key] = data[key]
+    return obj
 
 
 @app.route("/")
@@ -29,12 +41,10 @@ def co_table():
 
     collection = connection[DBS_NAME][COLLECTION_NAME]
     co_occurrences = collection.find_one()
-    # co_occurrences = json.dumps(co_occurrences, default=json_util.default)
-    co_list = []
-    for k, v in co_occurrences.items():
-        co_list.append((k, v))
+    co_occurrences = todict(co_occurrences)
+    co_list = list(co_occurrences.items())
+    co_list = sorted(co_list, key=itemgetter(1), reverse=True)
     print(co_list)
-    # co_list = sorted(co_list, key=lambda x: x[1], reverse=True)
     labels = ['Word', 'Co-Occurrence']
 
     df = pd.DataFrame.from_records(co_list, columns=labels)
