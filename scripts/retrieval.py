@@ -26,7 +26,7 @@ def retrieval(url):
     f = open('../data/pmcids.txt', 'r')
     first_line = f.readline()
 
-    co_list = dict()
+    co_list = []
 
     while first_line:
         first_line = f.readline()[:-1]
@@ -72,7 +72,7 @@ def retrieval(url):
 
                 fig_co_table[figure_url.replace('.', '_dot_').replace('$', '_dol_')] = co_table
 
-        co_list[first_line] = fig_co_table
+        co_list.append({'pmcid': first_line, 'figures': fig_co_table})
         print("Processed " + first_line + "...")
 
     # Store the generated table in a csv and json file
@@ -80,12 +80,12 @@ def retrieval(url):
     with open(file_name + ".json", 'w') as fp:
         json.dump(co_list, fp)
 
-    for pmcid, fig_co_table in co_list.items():
-        for fig_url, co_table in fig_co_table.items():
+    for item in co_list:
+        for fig_url, co_table in item['figures'].items():
             with open(file_name + ".csv", "w", newline='') as csv_file:
                 writer = csv.writer(csv_file, delimiter=',')
                 for word, occurrences in co_table.items():
-                    writer.writerow([pmcid, fig_url, word.encode('utf-8'), occurrences])
+                    writer.writerow([item['pmcid'], fig_url, word.encode('utf-8'), occurrences])
 
     f.close()
 
