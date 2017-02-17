@@ -1,6 +1,6 @@
 ######################################################
 #
-# reducer - Implements reducer function
+# jobrunner - Runs the mapreduce jobs reducer function
 # written by Anshuman Sahoo (anshuman264@gmail.com)
 #
 ######################################################
@@ -15,7 +15,18 @@ from scripts.mapper_and_reducer import MapperAndReducer
 
 
 def retrieve(filename):
-    """Read a file and return a sequence of (word, occurances) values.
+    """
+    Read a file and return a sequence of (word, occurrences) values.
+
+    Parameters
+    ----------
+    filename : str
+      PCMID to retrieve xml file
+
+    Returns
+    -------
+    list
+      List of tuples containing word and occurrences
     """
 
     ncbi_url = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id="
@@ -46,6 +57,7 @@ def retrieve(filename):
     ignore_words = {'a', 'an', 'and', 'are', 'as', 'be', 'by', 'for', 'if', 'in', 'is', 'it', 'of', 'or', 'py', 'that',
                     'the', 'to', 'with', '', 'were', 'was', '=', 'The', 'from', 'at', 'on', 'using', 'after', '<', '>',
                     '1', 'not'}
+
     # Iterate through all figures in document and find co-occurrences between figure caption and article body.
     # Co-occurrence is defined such that, given a figure caption <F> and body text <B>, list the words that occur
     # in both <F> and <B>, and the number of co-occurrences
@@ -72,9 +84,19 @@ def retrieve(filename):
 
 
 def count_co_occurences(item):
-    """Convert the partitioned data for a word to a
-    tuple containing the word and the number of occurances.
     """
+    Convert the partitioned data for a word to a
+    tuple containing the word and the number of occurances.
+    Parameters
+    ----------
+    item : tuple
+      get a word occurence pair
+    Returns
+    -------
+    list
+      List of tuples containing word and occurrences
+    """
+
     word, occurrences = item
     return (word.replace('.', '_dot_').replace('$', '_dol_'), sum(occurrences))
 

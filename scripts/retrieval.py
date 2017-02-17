@@ -1,6 +1,7 @@
 ######################################################
 #
 # retrieval - retrieve documents using pmcids and process it for co-occurrence
+# Initial attempt to download and process data
 # written by Anshuman Sahoo (anshuman264@gmail.com)
 #
 ######################################################
@@ -11,6 +12,22 @@ import csv
 
 
 def co_occurrence(f, b):
+    """
+    Given a list of words from the figure caption and the body text, return a table/dictionary
+    containing words in caption (key) and their occurrence in body.
+    Parameters
+    ----------
+    f : list
+        list conatining words from figure caption
+    b : str
+        list containing words from body text
+
+    Returns
+    -------
+    dict
+        A key of words in figure and their cooccurences in body
+
+    """
     list_of_figure_words = f.split()
     list_of_body_words = b.split()
     co_table = dict()
@@ -22,6 +39,21 @@ def co_occurrence(f, b):
 
 
 def retrieval(url):
+    """
+    Retrieves xml document from ncbi database using pmcid code, saves it in an Element tree, parses
+    it into lists of words for body and each figure. Then accumulate the counts.
+    Extended description of function.
+
+    Parameters
+    ----------
+    url : str
+        database url for ncbi efetch
+
+    Returns
+    -------
+    None
+        writes outputs to file
+    """
     # Skip first line of pmcids.txt because it is the title
     f = open('../data/pmcids.txt', 'r')
     first_line = f.readline()

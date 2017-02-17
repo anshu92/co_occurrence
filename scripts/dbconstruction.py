@@ -11,6 +11,14 @@ import pprint
 
 
 def dbconstruction():
+    """
+    Connect to remote MongoDB server and insert processed data as a document of key value pairs
+    (JSON).
+
+    Returns
+    -------
+    None
+    """
     client = pymongo.MongoClient(
         "mongodb://anshuman264:VJkCopXqbK5smqf0@cluster0-shard-00-00-ouybv.mongodb.net:27017,"
         "cluster0-shard-00-01-ouybv.mongodb.net:27017,"
