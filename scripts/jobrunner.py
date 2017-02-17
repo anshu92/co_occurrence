@@ -11,7 +11,7 @@ import json
 import csv
 
 
-from scripts.mapper_and_reducer import MapperAndReducer
+from mapper_and_reducer import MapperAndReducer
 
 
 def retrieve(filename):
