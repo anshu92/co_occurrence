@@ -24,11 +24,11 @@ def dbconstruction():
         "cluster0-shard-00-01-ouybv.mongodb.net:27017,"
         "cluster0-shard-00-02-ouybv.mongodb.net:27017/co_table?ssl=true&replicaSet=Cluster0-shard-0&authSource"
         "=admin")
-    db = client['co_table_1622017']
+    db = client['co_table_per_article']
 
     collection = db['co_collection']
 
-    source_file = open("../output/co_occurrence.json", 'r')
+    source_file = open("../output/co_occurrence_per_article.json", 'r')
 
     # pprint.pprint(collection.find_one())
 

@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 import operator
 import json
 import csv
-
+import collections
 
 from mapper_and_reducer import MapperAndReducer
 
@@ -73,7 +73,7 @@ def retrieve(filename):
 
             for word in list_of_figure_words:
                 if word not in ignore_words:
-                    output.append((word, list_of_body_words.count(word)))
+                    output.append((filename + '_' + word, list_of_body_words.count(word)))
 
             graphic = fig.find('.//graphic')
             figure_url = graphic.get('{http://www.w3.org/1999/xlink}href')
@@ -115,21 +115,20 @@ if __name__ == '__main__':
 
     mapper = MapperAndReducer(retrieve, count_co_occurences)
     word_counts = mapper(input_files)
-    word_counts.sort(key=operator.itemgetter(1))
-    word_counts.reverse()
+
+    final_data = []
+
+    for file in input_files:
+        final_data.append({'pmcid': file, 'co_table': [(key[8:], value) for key, value in word_counts if key.startswith(file)]})
 
     # Store the generated table in a csv and json file
-    file_name = "../output/co_occurrence"
+    file_name = "../output/co_occurrence_per_article"
     with open(file_name + ".json", 'w') as fp:
-        json.dump(dict(word_counts), fp)
+        json.dump(final_data, fp)
 
     with open(file_name + ".csv", "w", newline='') as csv_file:
         writer = csv.writer(csv_file, delimiter=',')
         for word in word_counts:
             writer.writerow([word[0].encode('utf-8'), word[1]])
 
-    print('\nTOP 20 WORDS BY CO_OCCURRENCE\n')
-    top20 = word_counts[:20]
-    longest = max(len(word) for word, count in top20)
-    for word, count in top20:
-        print('%-*s: %5s' % (longest + 1, word, count))
+
